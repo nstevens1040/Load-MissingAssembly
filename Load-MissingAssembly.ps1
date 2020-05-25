@@ -21,11 +21,18 @@
                 return $DLL
             }
             if ("$([System.IO.Directory]::GetDirectories("$($PWD.Path)","*$($AssemblyName)*",[System.IO.SearchOption]::AllDirectories))") {
-                cd "$([System.IO.Directory]::GetDirectories("$($PWD.Path)","*$($AssemblyName)*",[System.IO.SearchOption]::AllDirectories))\lib"
-                cd "$([System.IO.Directory]::GetDirectories("$($PWD.Path)","net??",[System.IO.SearchOption]::AllDirectories) | sort | select -Last 1)"
-                $DLL = "$([System.io.Directory]::GetFiles("$($PWD.Path)","*.dll"))"
-                cd "$($SDIR)"
-                return $DLL
+                cd "$([System.IO.Directory]::GetDirectories("$($PWD.Path)","*$($AssemblyName)*",[System.IO.SearchOption]::AllDirectories))\"
+                if([System.IO.Directory]::Exists("$([System.IO.Directory]::GetDirectories("$($PWD.Path)","*$($AssemblyName)*",[System.IO.SearchOption]::AllDirectories))\lib")){
+                    cd "$([System.IO.Directory]::GetDirectories("$($PWD.Path)","*$($AssemblyName)*",[System.IO.SearchOption]::AllDirectories))\lib"
+                    cd "$([System.IO.Directory]::GetDirectories("$($PWD.Path)","net??",[System.IO.SearchOption]::AllDirectories) | sort | select -Last 1)"
+                    $DLL = "$([System.io.Directory]::GetFiles("$($PWD.Path)","*.dll"))"
+                    cd "$($SDIR)"
+                    return $DLL
+                } else {
+                    $DLL = "$([System.io.Directory]::GetFiles("$($PWD.Path)","*.dll"))"
+                    cd "$($SDIR)"
+                    return $DLL
+                }
             }
         } else {
             if (![system.io.file]::Exists("C:\ProgramData\chocolatey\bin\choco.exe")) {
